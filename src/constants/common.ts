@@ -14,4 +14,9 @@ export const GENDER = [
       name: 'Мужской',
       url: 'male',
     },
+    {
+      id: '4',
+      name: 'Детский',
+      url: 'kid',
+    },
   ];

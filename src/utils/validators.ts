@@ -6,16 +6,11 @@ export const productFormValidator = (field: string, inputValue: string | { [key:
     return null;
   }
 
+  // Преобразование значения поля в строку
   if (typeof inputValue === 'string') {
     value = inputValue.trim();
-  }
-
-  if (typeof inputValue === 'object') {
-    if (inputValue.id) {
-      value = inputValue.id.trim();
-    } else {
-      value = '';
-    }
+  } else if (inputValue?.id) {
+    value = inputValue.id.trim();
   }
 
   if (value.length === 0) {
@@ -24,24 +19,23 @@ export const productFormValidator = (field: string, inputValue: string | { [key:
     };
   }
 
+  // Проверка поля "image" на корректность ссылки
   if (field === 'image') {
-    const regexp = /(https?:\/\/.*\.(?:png|jpg|jpeg))/;
-    const isImageUrl = regexp.test(value);
-
-    if (isImageUrl) return null;
-
-    return {
-      [field]: 'Укажите прямую ссылку на изображение с расширением .png, .jpg, jpeg',
-    };
+    const regexp = /^(https?:\/\/.*\.(?:png|jpg|jpeg|webp|gif)|https?:\/\/.*(?:id=)[^&]+.*)$/;
+    if (!regexp.test(value)) {
+      return {
+        [field]: 'Укажите действующую ссылку на изображение (например, с параметром id= или с расширением .png, .jpg, .jpeg, .webp или .gif)',
+      };
+    }
   }
+  
 
   return null;
 };
 
 export const categoryFormValidator = (field: string, inputValue: string | { [key: string]: string }) => {
   const validateFields = ['name', 'url'];
-
-  if (!validateFields.includes(field) || typeof inputValue === 'object') {
+  if (!validateFields.includes(field) || typeof inputValue !== 'string') {
     return null;
   }
 
@@ -53,21 +47,19 @@ export const categoryFormValidator = (field: string, inputValue: string | { [key
 
   if (field === 'url') {
     const regexp = /^[0-9A-Za-z-]+$/;
-    const url = regexp.test(inputValue);
-
-    if (url) return null;
-
-    return {
-      [field]: 'URL может содержать только цифры, буквы и дефисы',
-    };
+    if (!regexp.test(inputValue)) {
+      return {
+        [field]: 'URL может содержать только цифры, буквы и дефисы',
+      };
+    }
   }
+
   return null;
 };
 
 export const brandFormValidator = (field: string, inputValue: string | { [key: string]: string }) => {
   const validateFields = ['name', 'url'];
-
-  if (!validateFields.includes(field) || typeof inputValue === 'object') {
+  if (!validateFields.includes(field) || typeof inputValue !== 'string') {
     return null;
   }
 
@@ -79,21 +71,19 @@ export const brandFormValidator = (field: string, inputValue: string | { [key: s
 
   if (field === 'url') {
     const regexp = /^[0-9A-Za-z-]+$/;
-    const url = regexp.test(inputValue);
-
-    if (url) return null;
-
-    return {
-      [field]: 'URL может содержать только цифры, буквы и дефисы',
-    };
+    if (!regexp.test(inputValue)) {
+      return {
+        [field]: 'URL может содержать только цифры, буквы и дефисы',
+      };
+    }
   }
+
   return null;
 };
 
 export const cartFormValidator = (field: string, inputValue: string | { [key: string]: string }) => {
   const validateFields = ['name', 'phone', 'address'];
-
-  if (!validateFields.includes(field) || typeof inputValue === 'object') {
+  if (!validateFields.includes(field) || typeof inputValue !== 'string') {
     return null;
   }
 
@@ -102,5 +92,16 @@ export const cartFormValidator = (field: string, inputValue: string | { [key: st
       [field]: 'Поле не может быть пустым',
     };
   }
+
+  // Валидация поля "phone"
+  if (field === 'phone') {
+    const phoneRegexp = /^[0-9+\-\s()]+$/;
+    if (!phoneRegexp.test(inputValue)) {
+      return {
+        [field]: 'Телефон может содержать только цифры, пробелы, дефисы и символы + ()',
+      };
+    }
+  }
+
   return null;
 };

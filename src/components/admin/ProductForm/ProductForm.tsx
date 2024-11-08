@@ -58,7 +58,7 @@ const ProductForm: React.FC<IProductFormProps> = ({ onClose, categories, brands 
     setInput((prevState) => ({
       ...prevState,
       ...productToBeEdited,
-      discount: productToBeEdited.discount ? productToBeEdited.discount?.percent.toString() : '',
+      discount: productToBeEdited.discount ? productToBeEdited.discount.percent.toString() : '',
       weight: productToBeEdited.weight ? productToBeEdited.weight.toString() : '',
       price: productToBeEdited.price ? productToBeEdited.price.toString() : '',
     }));
@@ -76,6 +76,13 @@ const ProductForm: React.FC<IProductFormProps> = ({ onClose, categories, brands 
         percent,
         discountedPrice,
       };
+    }
+
+    // Проверка, что ссылка на изображение - корректный URL
+    const urlPattern = /^(http|https):\/\/[^ "]+$/;
+    if (!urlPattern.test(input.image)) {
+      alert('Введите корректный URL для изображения');
+      return;
     }
 
     if (productToBeEdited.id) {

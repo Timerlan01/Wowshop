@@ -60,7 +60,6 @@ const App = () => {
     },
     {
       path: PATHS.admin,
-
       element: <AdminPage />,
       children: [
         {
@@ -78,7 +77,6 @@ const App = () => {
         },
       ],
     },
-
     {
       path: '*',
       element: <NotFound />,
@@ -98,6 +96,22 @@ const App = () => {
 
     fetchData();
   }, [dispatch]);
+
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:8080');
+    ws.onopen = () => {
+      console.log('Connected to WebSocket server');
+    };
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log('Data received from server:', data);
+    };
+    ws.onclose = () => {
+      console.log('Disconnected from WebSocket server');
+    };
+
+    return () => ws.close();
+  }, []);
 
   return <div className={classes.app}>{routes}</div>;
 };

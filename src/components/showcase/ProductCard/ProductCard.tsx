@@ -28,15 +28,19 @@ const ProductCard: React.FC<IProductCardProps> = ({
   id,
   onWishlistClick,
 }) => {
-  // Проверяем наличие url у категории
+  // Проверка, что у категории есть URL
   const productPath = category?.url 
     ? generatePath('/:url/:id', { url: category.url, id }) 
-    : '#';  // Если url отсутствует, ставим заглушку
+    : '#';  // Если URL отсутствует, ставим заглушку
+
+  // Проверка на наличие изображения
+  const defaultImage = 'https://example.com/default-image.png';
+  const imageUrl = image && /^(http|https):\/\/[^ "]+$/.test(image) ? image : defaultImage;
 
   return (
     <li className={classes['product-card']}>
       <Link to={productPath} className={classes['image-wrapper']}>
-        <img src={image} alt={name} className={classes.image} />
+        <img src={imageUrl} alt={name} className={classes.image} />
 
         <div className={classes['wishlist-btn']}>
           <IconButton onClick={onWishlistClick}>
@@ -44,9 +48,11 @@ const ProductCard: React.FC<IProductCardProps> = ({
           </IconButton>
         </div>
 
-        <div className={classes['discount-chip']}>
-          {discount && <Chip text={`-${discount.percent}%`} mode={'attention'} />}
-        </div>
+        {discount && discount.percent && (
+          <div className={classes['discount-chip']}>
+            <Chip text={`-${discount.percent}%`} mode={'attention'} />
+          </div>
+        )}
       </Link>
 
       {discount ? (
@@ -58,7 +64,6 @@ const ProductCard: React.FC<IProductCardProps> = ({
         <span className={classes.price}>{price} тг</span>
       )}
 
-      {/* Используем тот же путь для названия продукта */}
       <Link to={productPath} className={classes.title}>
         {name}
       </Link>
